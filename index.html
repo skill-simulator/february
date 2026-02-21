@@ -492,7 +492,7 @@
 // ========== データ定義 ==========
 const winners = [
   {
-    day: '一日目',
+    day: '1枠1番',
     name: 'ストラダニエル',
     popularity: 13,
     frame: 4,
@@ -503,7 +503,7 @@ const winners = [
     marks: [],
   },
   {
-    day: '二日目',
+    day: '1枠2番',
     name: 'エバーコンテンツ',
     popularity: 15,
     frame: 2,
@@ -514,7 +514,7 @@ const winners = [
     marks: [],
   },
   {
-    day: '三日目',
+    day: '2枠3番',
     name: 'テンムンク',
     popularity: 1,
     frame: 2,
@@ -525,7 +525,7 @@ const winners = [
     marks: ['VC◎', 'GO◎', 'モンズ◎'],
   },
   {
-    day: '四日目',
+    day: '2枠4番',
     name: 'サマーナイトドーム',
     popularity: 3,
     frame: 6,
@@ -536,7 +536,7 @@ const winners = [
     marks: ['AK◎'],
   },
   {
-    day: '五日目',
+    day: '3枠5番',
     name: 'ブロードアピーラ',
     popularity: 13,
     frame: 16,
@@ -547,7 +547,7 @@ const winners = [
     marks: [],
   },
   {
-    day: '六日目',
+    day: '3枠6番',
     name: 'ヤング',
     popularity: 2,
     frame: 5,
@@ -558,7 +558,7 @@ const winners = [
     marks: [],
   },
   {
-    day: '七日目',
+    day: '4枠7番',
     name: 'サダノキッキング',
     popularity: 9,
     frame: 2,
@@ -569,7 +569,7 @@ const winners = [
     marks: [],
   },
   {
-    day: '八日目',
+    day: '4枠8番',
     name: 'ヴァーニングホース',
     popularity: 5,
     frame: 3,
@@ -580,7 +580,7 @@ const winners = [
     marks: [],
   },
   {
-    day: '九日目',
+    day: '5枠9番',
     name: 'ヴァーニングフィズ',
     popularity: 3,
     frame: 2,
@@ -591,7 +591,7 @@ const winners = [
     marks: ['AK◎'],
   },
   {
-    day: '十日目',
+    day: '5枠10番',
     name: 'ダランデュル',
     popularity: 11,
     frame: 13,
@@ -602,7 +602,7 @@ const winners = [
     marks: [],
   },
   {
-    day: '十一日目',
+    day: '6枠11番',
     name: 'ヴァーニングハート',
     popularity: 2,
     frame: 2,
@@ -613,7 +613,7 @@ const winners = [
     marks: ['AK◎'],
   },
   {
-    day: '十二日目',
+    day: '6枠12番',
     name: 'サマーナイトクライ',
     popularity: 1,
     frame: 14,
@@ -624,7 +624,7 @@ const winners = [
     marks: ['AK◎'],
   },
   {
-    day: '十三日目',
+    day: '7枠13番',
     name: 'サマーナイトオーヴ',
     popularity: 4,
     frame: 3,
@@ -635,7 +635,7 @@ const winners = [
     marks: [],
   },
   {
-    day: '十四日目',
+    day: '7枠14番',
     name: 'オニヨメバクタン',
     popularity: 2,
     frame: 13,
@@ -646,7 +646,7 @@ const winners = [
     marks: [],
   },
   {
-    day: '十五日目',
+    day: '8枠15番',
     name: 'ストラロべニア',
     popularity: 11,
     frame: 12,
@@ -654,6 +654,17 @@ const winners = [
     style: '追い込み',
     position: '15→14',
     skills: ['最終直線速度', '最終直線持続'],
+    marks: [],
+  },
+  {
+    day: '8枠16番',
+    name: 'サンナイズバッカス',
+    popularity: 13,
+    frame: 6,
+    time: '1:27',
+    style: '差し',
+    position: '10→2',
+    skills: ['中盤', '終盤', '才能と努力の結実Lv1', '世界を制した日本代表Lv1', '華麗なお嬢さんLv1'],
     marks: [],
   },
 ];
@@ -677,6 +688,7 @@ const races = [
   { day: '十三日目', horses: [{name:'サマーナイトオーヴ',rank:1},{name:'オニヨメバクタン',rank:2},{name:'ラクセスブロッケン',rank:3},{name:'ニトロニクス',rank:4},{name:'サンデーベガクン',rank:5}] },
   { day: '十四日目', horses: [{name:'オニヨメバクタン',rank:1},{name:'サマーナイトルース',rank:2},{name:'ステゴノエバヤン',rank:3},{name:'バイパー',rank:4},{name:'ポリバケツ',rank:5}] },
   { day: '十五日目', horses: [{name:'ストラロべニア',rank:1},{name:'サマーナイトルース',rank:2},{name:'レディキール',rank:3},{name:'ヒゲジーター',rank:4},{name:'スぺブエナヤング',rank:5}] },
+  { day: '十六日目', horses: [{name:'サンナイズバッカス',rank:1},{name:'サマーナイトバギー',rank:2},{name:'レディキール',rank:3},{name:'セカイオジョー',rank:4},{name:'スリーアップヤング',rank:5}] },
 ];
 
 const winnerNames = winners.map(w => w.name);
@@ -755,6 +767,7 @@ winners.forEach((w, idx) => {
       </div>
       <div class="card-body">
         <div class="info-col">
+          <div style="font-family:'Noto Sans JP',sans-serif;font-size:0.6rem;font-weight:700;letter-spacing:0.12em;color:#fff;background:var(--dark);padding:2px 8px;margin-bottom:5px;border-left:3px solid var(--gold);">▶ 予選レース結果</div>
           <div class="info-row"><span class="info-label">枠</span><span class="info-val">${w.frame}枠</span></div>
           <div class="info-row"><span class="info-label">人気</span><span class="info-val" style="color:${popColor}">${w.popularity}番人気</span></div>
           <div class="info-row"><span class="info-label">T</span><span class="time-badge">${w.time}</span></div>
