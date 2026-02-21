@@ -1,0 +1,828 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>フェブラリーS前哨戦 競馬新聞</title>
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+JP:wght@400;600;700;900&family=Noto+Sans+JP:wght@300;400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink: #1a1008;
+    --aged: #f5ede0;
+    --cream: #fdf8f0;
+    --accent: #b5281a;
+    --gold: #c8922a;
+    --dark: #2c1a0a;
+    --border: #8b6b3a;
+    --mid: #6b4c2a;
+    --win: #a51313;
+    --lose: #1a3a8b;
+    --shadow: rgba(60,30,10,0.18);
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: #d9c9a8;
+    background-image:
+      repeating-linear-gradient(0deg, transparent, transparent 28px, rgba(120,80,30,0.07) 28px, rgba(120,80,30,0.07) 29px),
+      repeating-linear-gradient(90deg, transparent, transparent 28px, rgba(120,80,30,0.05) 28px, rgba(120,80,30,0.05) 29px);
+    font-family: 'Noto Serif JP', serif;
+    color: var(--ink);
+    min-height: 100vh;
+    padding: 24px 12px 40px;
+  }
+
+  .newspaper {
+    max-width: 1080px;
+    margin: 0 auto;
+    background: var(--cream);
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23noise)' opacity='0.04'/%3E%3C/svg%3E");
+    border: 2px solid var(--border);
+    box-shadow: 6px 6px 32px var(--shadow), 0 0 0 6px #c8a96a33;
+    position: relative;
+  }
+
+  /* Header */
+  .header {
+    border-bottom: 4px double var(--border);
+    padding: 18px 28px 14px;
+    position: relative;
+    background: linear-gradient(to bottom, #f0e4ca, var(--cream));
+  }
+
+  .header-top {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 16px;
+  }
+
+  .paper-name {
+    font-size: 3.2rem;
+    font-weight: 900;
+    letter-spacing: 0.18em;
+    color: var(--accent);
+    text-shadow: 2px 2px 0 #7a100a44;
+    line-height: 1;
+  }
+
+  .paper-sub {
+    font-size: 0.75rem;
+    font-family: 'Noto Sans JP', sans-serif;
+    color: var(--mid);
+    letter-spacing: 0.12em;
+    margin-top: 4px;
+  }
+
+  .header-meta {
+    text-align: right;
+    font-size: 0.78rem;
+    font-family: 'Noto Sans JP', sans-serif;
+    color: var(--mid);
+    line-height: 1.7;
+  }
+
+  .race-title-bar {
+    margin-top: 12px;
+    background: var(--dark);
+    color: #f5e6c2;
+    text-align: center;
+    padding: 7px 0 6px;
+    letter-spacing: 0.35em;
+    font-size: 1.05rem;
+    font-weight: 700;
+    border-left: 6px solid var(--gold);
+    border-right: 6px solid var(--gold);
+  }
+
+  /* Content */
+  .content {
+    padding: 20px 28px 28px;
+  }
+
+  .section-head {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 24px 0 14px;
+  }
+
+  .section-head::before, .section-head::after {
+    content: '';
+    flex: 1;
+    height: 2px;
+    background: linear-gradient(to right, var(--gold), transparent);
+  }
+  .section-head::after {
+    background: linear-gradient(to left, var(--gold), transparent);
+  }
+
+  .section-head span {
+    font-size: 0.8rem;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-weight: 700;
+    letter-spacing: 0.22em;
+    color: var(--gold);
+    white-space: nowrap;
+  }
+
+  /* Winner cards grid */
+  .winners-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 16px;
+  }
+
+  .card {
+    border: 1.5px solid var(--border);
+    background: linear-gradient(135deg, #fffbf3 80%, #f5e8cf);
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.18s, box-shadow 0.18s;
+    cursor: default;
+  }
+
+  .card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 3px;
+    background: linear-gradient(to right, var(--accent), var(--gold));
+  }
+
+  .card:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 24px var(--shadow);
+  }
+
+  .card-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 10px 14px 8px;
+    border-bottom: 1px dashed var(--border);
+    background: rgba(184,140,60,0.08);
+  }
+
+  .day-badge {
+    background: var(--accent);
+    color: #fff;
+    font-size: 0.65rem;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-weight: 700;
+    padding: 2px 7px;
+    letter-spacing: 0.08em;
+    white-space: nowrap;
+  }
+
+  .winner-rank {
+    font-size: 1.4rem;
+    font-weight: 900;
+    color: var(--gold);
+    text-shadow: 1px 1px 0 #7a4a0055;
+    line-height: 1;
+    flex-shrink: 0;
+  }
+
+  .winner-name {
+    font-size: 1.1rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    line-height: 1.2;
+    flex: 1;
+  }
+
+  .card-body {
+    padding: 10px 14px 12px;
+    display: flex;
+    gap: 14px;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 0.72rem;
+  }
+
+  .info-col {
+    flex: 0 0 auto;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    color: var(--mid);
+    min-width: 130px;
+  }
+
+  .info-row {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+
+  .info-label {
+    background: var(--dark);
+    color: #f0ddb8;
+    padding: 1px 5px;
+    font-size: 0.62rem;
+    font-weight: 700;
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .info-val {
+    color: var(--ink);
+    font-weight: 700;
+    font-size: 0.75rem;
+  }
+
+  .style-tag {
+    display: inline-block;
+    background: var(--gold);
+    color: #fff;
+    font-size: 0.6rem;
+    font-weight: 700;
+    padding: 1px 6px;
+    letter-spacing: 0.05em;
+  }
+
+  /* Battle table */
+  .battle-col {
+    flex: 1;
+    border-left: 1px dashed var(--border);
+    padding-left: 10px;
+  }
+
+  .battle-title {
+    font-size: 0.62rem;
+    font-weight: 700;
+    color: var(--mid);
+    letter-spacing: 0.1em;
+    margin-bottom: 5px;
+    border-bottom: 1px solid #d4b880;
+    padding-bottom: 3px;
+  }
+
+  .battle-entry {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    margin-bottom: 3px;
+    font-size: 0.67rem;
+    line-height: 1.3;
+  }
+
+  .br {
+    font-size: 0.55rem;
+    font-weight: 900;
+    padding: 1px 4px;
+    border-radius: 2px;
+    flex-shrink: 0;
+  }
+
+  .br-win {
+    background: var(--win);
+    color: #fff;
+  }
+
+  .br-lose {
+    background: var(--lose);
+    color: #fff;
+  }
+
+  .br-day {
+    color: var(--mid);
+    font-size: 0.6rem;
+    flex-shrink: 0;
+  }
+
+  .battle-none {
+    color: #aaa;
+    font-size: 0.65rem;
+    font-style: italic;
+  }
+
+  /* Skills section */
+  .skills-section {
+    padding: 8px 14px 12px;
+    border-top: 1px dashed var(--border);
+    font-family: 'Noto Sans JP', sans-serif;
+  }
+
+  .skills-title {
+    font-size: 0.6rem;
+    font-weight: 700;
+    color: var(--mid);
+    letter-spacing: 0.1em;
+    margin-bottom: 6px;
+  }
+
+  .skills-wrap {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3px;
+  }
+
+  .skill-tag {
+    background: #e8dfc0;
+    border: 1px solid #c4a86a;
+    color: var(--dark);
+    font-size: 0.58rem;
+    padding: 1px 6px;
+    border-radius: 2px;
+    font-weight: 700;
+    letter-spacing: 0.02em;
+  }
+
+  .skill-tag.s3 { border-color: var(--gold); background: #fff8e0; }
+  .skill-tag.s4 { border-color: var(--accent); background: #fff0ee; color: var(--accent); }
+
+  .time-badge {
+    font-size: 0.68rem;
+    font-weight: 700;
+    font-family: 'Noto Sans JP', sans-serif;
+    color: var(--ink);
+  }
+
+  /* Full head to head table */
+  .h2h-section {
+    margin-top: 28px;
+  }
+
+  .h2h-table-wrap {
+    overflow-x: auto;
+  }
+
+  .h2h-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 0.72rem;
+  }
+
+  .h2h-table th {
+    background: var(--dark);
+    color: #f0ddb8;
+    padding: 6px 10px;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-align: center;
+    white-space: nowrap;
+    border: 1px solid var(--border);
+    font-size: 0.65rem;
+  }
+
+  .h2h-table th.name-col {
+    background: #3d2208;
+    text-align: left;
+    min-width: 110px;
+  }
+
+  .h2h-table td {
+    border: 1px solid #d4b880;
+    padding: 5px 8px;
+    text-align: center;
+    vertical-align: middle;
+  }
+
+  .h2h-table tr:nth-child(even) td {
+    background: rgba(200,162,80,0.06);
+  }
+
+  .h2h-table tr:hover td {
+    background: rgba(200,162,80,0.14);
+  }
+
+  .h2h-table td.name-col {
+    text-align: left;
+    font-weight: 700;
+    font-size: 0.78rem;
+    color: var(--dark);
+    background: rgba(200,162,80,0.06);
+    white-space: nowrap;
+  }
+
+  .cell-win {
+    background: #ffeaea !important;
+    color: var(--win);
+    font-weight: 700;
+    font-size: 0.65rem;
+  }
+
+  .cell-lose {
+    background: #eaefff !important;
+    color: var(--lose);
+    font-weight: 700;
+    font-size: 0.65rem;
+  }
+
+  .cell-self {
+    background: #2c1a0a !important;
+  }
+
+  .cell-empty {
+    color: #ccc;
+    font-size: 0.6rem;
+  }
+
+  /* Footer */
+  .footer {
+    border-top: 3px double var(--border);
+    padding: 10px 28px;
+    font-family: 'Noto Sans JP', sans-serif;
+    font-size: 0.65rem;
+    color: var(--mid);
+    display: flex;
+    justify-content: space-between;
+    background: linear-gradient(to top, #ede0c4, var(--cream));
+    letter-spacing: 0.06em;
+  }
+
+  @media (max-width: 600px) {
+    .paper-name { font-size: 2rem; }
+    .content { padding: 14px 14px 20px; }
+    .winners-grid { grid-template-columns: 1fr; }
+    .card-body { flex-direction: column; }
+    .battle-col { border-left: none; padding-left: 0; border-top: 1px dashed var(--border); padding-top: 8px; }
+  }
+</style>
+</head>
+<body>
+<div class="newspaper">
+
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-top">
+      <div>
+        <div class="paper-name">競 馬 新 聞</div>
+        <div class="paper-sub">KEIBA SHINBUN ／ 全国ダート競走速報</div>
+      </div>
+      <div class="header-meta">
+        距離：ダート 1600m<br>
+        全15日間レース<br>
+        フェブラリーS前哨戦
+      </div>
+    </div>
+    <div class="race-title-bar">◆ フェブラリーステークス 前哨戦 ◆ 歴代勝馬速報 ◆</div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="content">
+
+    <div class="section-head"><span>▼ 各日 1着馬 カード</span></div>
+
+    <div class="winners-grid" id="winners-grid"></div>
+
+    <div class="section-head h2h-section"><span>▼ 勝馬 対戦マトリックス表</span></div>
+    <p style="font-family:'Noto Sans JP',sans-serif;font-size:0.7rem;color:var(--mid);margin-bottom:10px;">
+      <span style="background:#ffeaea;color:#a51313;padding:1px 6px;font-weight:700;border:1px solid #c88;">●負</span>
+      同士が同一レースで対戦した結果を表示。縦軸の馬から見た結果です。
+      <span style="background:#eaefff;color:#1a3a8b;padding:1px 6px;font-weight:700;border:1px solid #8ac;margin-left:6px;">●勝</span>は相手より上位着順。
+    </p>
+    <div class="h2h-table-wrap">
+      <table class="h2h-table" id="h2h-table"></table>
+    </div>
+
+  </div>
+
+  <div class="footer">
+    <span>※ 印凡例：AK◎ GO◎ VC◎ モンズ◎ など各予想家の本命印</span>
+    <span>道中表記：中間通過順位-最終着順</span>
+  </div>
+</div>
+
+<script>
+// ========== データ定義 ==========
+const winners = [
+  {
+    day: '一日目',
+    name: 'ストラダニエル',
+    popularity: 13,
+    frame: 4,
+    time: '1:27',
+    style: '追い込み',
+    position: '?→13',
+    skills: ['最終直線速度'],
+    marks: [],
+  },
+  {
+    day: '二日目',
+    name: 'エバーコンテンツ',
+    popularity: 15,
+    frame: 2,
+    time: '1:28',
+    style: '追い込み',
+    position: '?→15',
+    skills: ['最終直線持続', '最終直線速度'],
+    marks: [],
+  },
+  {
+    day: '三日目',
+    name: 'テンムンク',
+    popularity: 1,
+    frame: 2,
+    time: '1:28',
+    style: '?',
+    position: '?→6',
+    skills: ['対抗意識Lv4', 'ラストスパートLv3', '最終直線速度'],
+    marks: ['VC◎', 'GO◎', 'モンズ◎'],
+  },
+  {
+    day: '四日目',
+    name: 'サマーナイトドーム',
+    popularity: 3,
+    frame: 6,
+    time: '1:27',
+    style: '追い込み',
+    position: '12→4',
+    skills: ['中盤', '最終直線持続', '最終直線速度'],
+    marks: ['AK◎'],
+  },
+  {
+    day: '五日目',
+    name: 'ブロードアピーラ',
+    popularity: 13,
+    frame: 16,
+    time: '1:28',
+    style: '追い込み',
+    position: '?→14',
+    skills: ['最終直線速度', '最終直線持続'],
+    marks: [],
+  },
+  {
+    day: '六日目',
+    name: 'ヤング',
+    popularity: 2,
+    frame: 5,
+    time: '1:29',
+    style: '追い込み',
+    position: '8→6',
+    skills: ['最終直線速度'],
+    marks: [],
+  },
+  {
+    day: '七日目',
+    name: 'サダノキッキング',
+    popularity: 9,
+    frame: 2,
+    time: '1:26',
+    style: '先行',
+    position: '2→2',
+    skills: ['好位確保Lv3(J)', '先手必勝Lv4', '王者の歩みLv1', '世界を制した日本代表Lv1', '直線一気Lv1【固有】', '渾身の末脚Lv3'],
+    marks: [],
+  },
+  {
+    day: '八日目',
+    name: 'ヴァーニングホース',
+    popularity: 5,
+    frame: 3,
+    time: '1:37',
+    style: '逃げ',
+    position: '2→1',
+    skills: ['ペースアップLv4', '王者の歩みLv1', 'ワンダーホースLv1', '最終直線持続Lv3', '渾身の末脚Lv3', '勝利の咆哮Lv1'],
+    marks: [],
+  },
+  {
+    day: '九日目',
+    name: 'ヴァーニングフィズ',
+    popularity: 3,
+    frame: 2,
+    time: '1:27',
+    style: '逃げ',
+    position: '1→1',
+    skills: ['追い上げLv3', '抜け出しLv3', '最終直線持続Lv3', '渾身の末脚Lv3', '最終直線速度Lv4'],
+    marks: ['AK◎'],
+  },
+  {
+    day: '十日目',
+    name: 'ダランデュル',
+    popularity: 11,
+    frame: 13,
+    time: '1:28',
+    style: '追い込み',
+    position: '?→10',
+    skills: ['先頭確保Lv3(J)', '最終直線速度'],
+    marks: [],
+  },
+  {
+    day: '十一日目',
+    name: 'ヴァーニングハート',
+    popularity: 2,
+    frame: 2,
+    time: '1:27',
+    style: '逃げ',
+    position: '1→1',
+    skills: ['先頭確保Lv3(J)', '王者の歩みLv1', 'ワンダーホースLv1', '追い上げLv3', '抜け出しLv3', '勝利の咆哮Lv1', '渾身の末脚Lv3'],
+    marks: ['AK◎'],
+  },
+  {
+    day: '十二日目',
+    name: 'サマーナイトクライ',
+    popularity: 1,
+    frame: 14,
+    time: '1:27',
+    style: '先行',
+    position: '3→1',
+    skills: ['10ハロンのペースアップLv?', '王者の歩みLv1', '抜け出しLv3', '最終直線持続Lv3', '最終直線速度【名馬】Lv1', '最終直線速度Lv4'],
+    marks: ['AK◎'],
+  },
+  {
+    day: '十三日目',
+    name: 'サマーナイトオーヴ',
+    popularity: 4,
+    frame: 3,
+    time: '1:27',
+    style: '逃げ',
+    position: '1→1',
+    skills: ['先頭確保Lv3(J)', '先手必勝Lv4', 'ワンダーホースLv1', '才能と努力の結実Lv1', '勝利の咆哮Lv1', '渾身の末脚Lv3'],
+    marks: [],
+  },
+  {
+    day: '十四日目',
+    name: 'オニヨメバクタン',
+    popularity: 2,
+    frame: 13,
+    time: '1:28',
+    style: '先行',
+    position: '6→5',
+    skills: ['豪脚一閃・ダートLv3', '最終直線速度'],
+    marks: [],
+  },
+  {
+    day: '十五日目',
+    name: 'ストラロべニア',
+    popularity: 11,
+    frame: 12,
+    time: '1:28',
+    style: '追い込み',
+    position: '15→14',
+    skills: ['最終直線速度', '最終直線持続'],
+    marks: [],
+  },
+];
+
+// ========== 対戦履歴（同一レース出走） ==========
+// 各レースの全馬データ（着順含む）
+// format: { day, dayNum, horses: [{name, rank}] }
+const races = [
+  { day: '一日目', horses: [{name:'ストラダニエル',rank:1},{name:'サマーナイトルース',rank:2},{name:'レオンダイヤモンド',rank:3},{name:'アドマイヤベガサン',rank:4},{name:'ナイトオブタマネギ',rank:5}] },
+  { day: '二日目', horses: [{name:'エバーコンテンツ',rank:1},{name:'ディープエリート',rank:2},{name:'トレンド',rank:3},{name:'サマーナイトワンダ',rank:4},{name:'ディープオジョウ',rank:5}] },
+  { day: '三日目', horses: [{name:'テンムンク',rank:1},{name:'メガカメックス',rank:2},{name:'ディープエリート',rank:3},{name:'サマーナイトオーヴ',rank:4},{name:'グラタンタベタイ',rank:5}] },
+  { day: '四日目', horses: [{name:'サマーナイトドーム',rank:1},{name:'ブロードアピーラ',rank:2},{name:'ヤング',rank:3},{name:'セカイオジョー',rank:4},{name:'ヘソ・ピ',rank:5}] },
+  { day: '五日目', horses: [{name:'ブロードアピーラ',rank:1},{name:'バイパー',rank:2},{name:'ヴァーニングハート',rank:3},{name:'レディスイート',rank:4},{name:'ディープコンコルド',rank:5}] },
+  { day: '六日目', horses: [{name:'ヤング',rank:1},{name:'トロットサンダース',rank:2},{name:'バイパー',rank:3},{name:'キタサンクイーン',rank:4},{name:'ナントカシヨウカ',rank:5}] },
+  { day: '七日目', horses: [{name:'サダノキッキング',rank:1},{name:'ヴァーニングハート',rank:2},{name:'タジマギュウ',rank:3},{name:'スコシガンバル',rank:4},{name:'ナンシーチェニー',rank:5}] },
+  { day: '八日目', horses: [{name:'ヴァーニングホース',rank:1},{name:'オニヨメバクタン',rank:2},{name:'バイパー',rank:3},{name:'レディエレガント',rank:4},{name:'ディープエリート',rank:5}] },
+  { day: '九日目', horses: [{name:'ヴァーニングフィズ',rank:1},{name:'ディープトルネード',rank:2},{name:'オニヨメバクタン',rank:3},{name:'スコシガンバル',rank:4},{name:'レディキール',rank:5}] },
+  { day: '十日目', horses: [{name:'ダランデュル',rank:1},{name:'オニヨメバクタン',rank:2},{name:'ブルーインパルス',rank:3},{name:'ヴァーニングハート',rank:4},{name:'シルフィード',rank:5}] },
+  { day: '十一日目', horses: [{name:'ヴァーニングハート',rank:1},{name:'ナイトオブタマネギ',rank:2},{name:'ノーエバーオールド',rank:3},{name:'スリーアップヤング',rank:4},{name:'マーフィー',rank:5}] },
+  { day: '十二日目', horses: [{name:'サマーナイトクライ',rank:1},{name:'レディキール',rank:2},{name:'オニヨメバクタン',rank:3},{name:'ディープエリート',rank:4},{name:'トロットサンダース',rank:5}] },
+  { day: '十三日目', horses: [{name:'サマーナイトオーヴ',rank:1},{name:'オニヨメバクタン',rank:2},{name:'ラクセスブロッケン',rank:3},{name:'ニトロニクス',rank:4},{name:'サンデーベガクン',rank:5}] },
+  { day: '十四日目', horses: [{name:'オニヨメバクタン',rank:1},{name:'サマーナイトルース',rank:2},{name:'ステゴノエバヤン',rank:3},{name:'バイパー',rank:4},{name:'ポリバケツ',rank:5}] },
+  { day: '十五日目', horses: [{name:'ストラロべニア',rank:1},{name:'サマーナイトルース',rank:2},{name:'レディキール',rank:3},{name:'ヒゲジーター',rank:4},{name:'スぺブエナヤング',rank:5}] },
+];
+
+const winnerNames = winners.map(w => w.name);
+
+// Build battle map: battles[A][B] = [{day, aRank, bRank}]
+const battles = {};
+winnerNames.forEach(n => battles[n] = {});
+
+races.forEach(race => {
+  const raceWinners = race.horses.filter(h => winnerNames.includes(h.name));
+  for (let i = 0; i < raceWinners.length; i++) {
+    for (let j = 0; j < raceWinners.length; j++) {
+      if (i === j) continue;
+      const a = raceWinners[i];
+      const b = raceWinners[j];
+      if (!battles[a.name][b.name]) battles[a.name][b.name] = [];
+      battles[a.name][b.name].push({ day: race.day, aRank: a.rank, bRank: b.rank });
+    }
+  }
+});
+
+// ========== カード生成 ==========
+function skillClass(s) {
+  if (s.includes('Lv4')) return 's4';
+  if (s.includes('Lv3') || s.includes('Lv1')) return 's3';
+  return '';
+}
+
+function getBattleEntries(winnerName, limit) {
+  const entries = [];
+  for (const opponent of winnerNames) {
+    if (opponent === winnerName) continue;
+    const records = battles[winnerName][opponent];
+    if (records && records.length > 0) {
+      records.forEach(r => {
+        const won = r.aRank < r.bRank;
+        entries.push({ opponent, day: r.day, won, aRank: r.aRank, bRank: r.bRank });
+      });
+    }
+  }
+  if (limit) return entries.slice(0, limit);
+  return entries;
+}
+
+const grid = document.getElementById('winners-grid');
+winners.forEach((w, idx) => {
+  const battleEntries = getBattleEntries(w.name, 5);
+  const battleHTML = battleEntries.length === 0
+    ? '<div class="battle-none">対戦なし</div>'
+    : battleEntries.map(e => {
+        const cls = e.won ? 'br-win' : 'br-lose';
+        const label = e.won ? '勝' : '負';
+        return `<div class="battle-entry"><span class="br ${cls}">●${label}</span><span class="br-day">${e.day}</span><span>${e.opponent}（${e.bRank}着）</span></div>`;
+      }).join('');
+
+  const skillsHTML = w.skills.map(s =>
+    `<span class="skill-tag ${skillClass(s)}">${s}</span>`
+  ).join('');
+
+  const marksHTML = w.marks.length > 0
+    ? `<span style="font-family:'Noto Sans JP',sans-serif;font-size:0.62rem;color:#a51313;font-weight:700;margin-left:6px;">${w.marks.join(' ')}</span>` : '';
+
+  const popColor = w.popularity >= 10 ? '#888' : w.popularity <= 3 ? '#a51313' : '#2c5f2e';
+
+  grid.innerHTML += `
+    <div class="card">
+      <div class="card-header">
+        <span class="day-badge">${w.day}</span>
+        <div>
+          <div style="display:flex;align-items:center;gap:6px;">
+            <span class="winner-rank">🏆</span>
+            <span class="winner-name">${w.name}</span>
+            ${marksHTML}
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div class="info-col">
+          <div class="info-row"><span class="info-label">枠</span><span class="info-val">${w.frame}枠</span></div>
+          <div class="info-row"><span class="info-label">人気</span><span class="info-val" style="color:${popColor}">${w.popularity}番人気</span></div>
+          <div class="info-row"><span class="info-label">T</span><span class="time-badge">${w.time}</span></div>
+          <div class="info-row"><span class="info-label">道中</span><span class="info-val">${w.position}</span></div>
+          <div class="info-row"><span class="info-label">脚質</span><span class="style-tag">${w.style}</span></div>
+        </div>
+        <div class="battle-col">
+          <div class="battle-title">⚔ 勝馬同士 対戦履歴</div>
+          ${battleHTML}
+        </div>
+      </div>
+      <div class="skills-section">
+        <div class="skills-title">▶ スキル構成</div>
+        <div class="skills-wrap">${skillsHTML}</div>
+      </div>
+    </div>
+  `;
+});
+
+// ========== 対戦マトリックス ==========
+const table = document.getElementById('h2h-table');
+let headerRow = '<tr><th class="name-col">馬名 \\ 相手</th>';
+winnerNames.forEach((n, i) => {
+  headerRow += `<th title="${n}">${i + 1}</th>`;
+});
+headerRow += '</tr>';
+
+let legendRow = '<tr><td class="name-col" style="font-size:0.6rem;color:var(--mid);font-family:\'Noto Sans JP\',sans-serif;">① ストラダニエル<br>② エバーコンテンツ<br>③ テンムンク<br>④ サマーナイトドーム<br>⑤ ブロードアピーラ<br>⑥ ヤング<br>⑦ サダノキッキング<br>⑧ ヴァーニングホース</td>';
+winnerNames.slice(0, 8).forEach((n) => {
+  legendRow += `<td style="font-size:0.58rem;font-family:\'Noto Sans JP\',sans-serif;color:#666;background:#faf6ec;">-</td>`;
+});
+legendRow += '</tr>';
+
+let bodyRows = '';
+winnerNames.forEach((rowName, ri) => {
+  let row = `<tr><td class="name-col">${ri + 1}. ${rowName}</td>`;
+  winnerNames.forEach((colName, ci) => {
+    if (ri === ci) {
+      row += `<td class="cell-self"></td>`;
+      return;
+    }
+    const records = battles[rowName][colName];
+    if (!records || records.length === 0) {
+      row += `<td class="cell-empty">─</td>`;
+      return;
+    }
+    const parts = records.map(r => {
+      const won = r.aRank < r.bRank;
+      return `<span class="${won ? 'br br-win' : 'br br-lose'}" style="font-size:0.55rem;padding:1px 3px;border-radius:1px;font-weight:900;margin:1px;display:inline-block;">${won ? '勝' : '負'}<br><span style="font-size:0.48rem;font-weight:400;">${r.day.replace('日目','')}</span></span>`;
+    }).join('');
+    const allWon = records.every(r => r.aRank < r.bRank);
+    const allLost = records.every(r => r.aRank > r.bRank);
+    const cls = allWon ? 'cell-win' : allLost ? 'cell-lose' : '';
+    row += `<td class="${cls}" style="padding:3px;">${parts}</td>`;
+  });
+  row += '</tr>';
+  bodyRows += row;
+});
+
+table.innerHTML = headerRow + bodyRows;
+
+// Add legend below table
+const legendDiv = document.createElement('div');
+legendDiv.style.cssText = 'font-family:Noto Sans JP,sans-serif;font-size:0.65rem;color:var(--mid);margin-top:10px;display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:2px 16px;';
+winnerNames.forEach((n, i) => {
+  legendDiv.innerHTML += `<span>❶${i+1} = ${n}</span>`;
+});
+document.querySelector('.h2h-table-wrap').after(legendDiv);
+</script>
+</body>
+</html>
